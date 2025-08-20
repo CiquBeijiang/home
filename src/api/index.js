@@ -53,7 +53,6 @@ export const getHitokoto = async () => {
  * 天气
  */
 
-// 获取城市adcode
 export const getAdcode = async (key) => {
   try {
     const res = await fetch(`https://restapi.amap.com/v3/ip?key=${key}`);
@@ -77,8 +76,8 @@ export const getAdcode = async (key) => {
   }
 };
 
-// 获取高德地理天气信息
-export const getWeather = async (key, city) => {
+// 获取高德地理天气信息，默认城市为南京
+export const getWeather = async (key, city = '南京') => {  // 这里设置默认城市为南京
   try {
     // 必须指定extensions参数（base:实时天气 all:预报+实时）
     const res = await fetch(
@@ -101,6 +100,31 @@ export const getWeather = async (key, city) => {
     throw error;
   }
 };
+
+// 补充getOtherWeather函数，默认城市为南京
+export const getOtherWeather = async (key, city = '伦敦') => {
+  try {
+    const res = await fetch(
+      `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${encodeURIComponent(city)}&extensions=all`
+    );
+    
+    if (!res.ok) {
+      throw new Error(`HTTP错误：${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    if (data.status !== '1') {
+      throw new Error(`API错误：${data.info || '未知错误'}`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('获取其他天气信息失败：', error);
+    throw error;
+  }
+};
+
 
 
 // 获取教书先生天气 API
