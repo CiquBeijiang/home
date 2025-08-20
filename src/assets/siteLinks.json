@@ -2,7 +2,7 @@
   {
     "icon": "Blog",
     "name": "博客",
-    "link": "/blog"  // 补充具体链接
+    "link": "/blog"  
   },
   {
     "icon": "Cloud",
