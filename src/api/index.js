@@ -53,23 +53,87 @@ export const getHitokoto = async () => {
  * 天气
  */
 
-// 获取高德地理位置信息
+// 获取城市adcode
 export const getAdcode = async (key) => {
-  const res = await fetch(`https://restapi.amap.com/v3/ip?key=${key}`);
-  return await res.json();
+  try {
+    const res = await fetch(`https://restapi.amap.com/v3/ip?key=${key}`);
+    
+    // 检查HTTP响应状态
+    if (!res.ok) {
+      throw new Error(`HTTP错误：${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    // 检查API返回状态
+    if (data.status !== '1') {
+      throw new Error(`API错误：${data.info || '未知错误'}`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('获取adcode失败：', error);
+    throw error; // 抛出错误供调用方处理
+  }
 };
 
 // 获取高德地理天气信息
 export const getWeather = async (key, city) => {
-  const res = await fetch(
-    `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${city}`,
-  );
-  return await res.json();
+  try {
+    // 必须指定extensions参数（base:实时天气 all:预报+实时）
+    const res = await fetch(
+      `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${encodeURIComponent(city)}&extensions=base`
+    );
+    
+    if (!res.ok) {
+      throw new Error(`HTTP错误：${res.status}`);
+    }
+    
+    const data = await res.json();
+    
+    if (data.status !== '1') {
+      throw new Error(`API错误：${data.info || '未知错误'}`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('获取天气失败：', error);
+    throw error;
+  }
 };
+
 
 // 获取教书先生天气 API
 // https://api.oioweb.cn/doc/weather/GetWeather
-export const getOtherWeather = async () => {
-  const res = await fetch("https://api.oioweb.cn/api/weather/GetWeather");
-  return await res.json();
+export const getNanjingWeather = async () => {
+  try {
+    // 固定查询南京的天气，城市参数设为"南京"
+    const city = "南京";
+    
+    // 构建请求URL并添加城市参数
+    const url = new URL("https://api.oioweb.cn/api/weather/GetWeather");
+    url.searchParams.append('city', encodeURIComponent(city));
+    // 如果该API需要密钥，请在这里添加，例如：
+    // url.searchParams.append('key', '你的API密钥');
+    
+    const res = await fetch(url.toString());
+    
+    // 检查HTTP响应状态
+    if (!res.ok) {
+      throw new Error(`请求失败: ${res.status} ${res.statusText}`);
+    }
+    
+    const data = await res.json();
+    
+    // 验证API返回数据（根据实际API响应结构调整）
+    // 不同API的成功标识可能不同，这里仅为示例
+    if (data.code !== 200 && data.code !== 0) {
+      throw new Error(`API错误: ${data.msg || '获取南京天气失败'}`);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('获取南京天气信息失败:', error);
+    throw error; // 抛出错误供调用方处理
+  }
 };
