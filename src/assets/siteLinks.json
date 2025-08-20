@@ -2,36 +2,36 @@
   {
     "icon": "Blog",
     "name": "博客",
-
+    "link": "/blog"  // 补充具体链接
   },
   {
     "icon": "Cloud",
     "name": "网盘",
-
+    "link": "/cloud"
   },
   {
     "icon": "CompactDisc",
     "name": "音乐",
-
+    "link": "/music"
   },
   {
     "icon": "Compass",
     "name": "起始页",
-
+    "link": "/"
   },
   {
     "icon": "Photography",
     "name": "摄影集",
-
+    "link": "/photos"
   },
   {
     "icon": "Diary",
     "name": "日记",
-
+    "link": "/diary"
   },
   {
     "icon": "LaptopCode",
     "name": "站点监测",
-
+    "link": "/monitor"
   }
 ]
