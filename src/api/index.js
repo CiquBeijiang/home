@@ -53,20 +53,29 @@ export const getHitokoto = async () => {
  * 天气
  */
 
+// 南京的adcode编码，比城市名更可靠
+const NANJING_ADCODE = '320100';
+
+// 获取IP定位对应的adcode
 export const getAdcode = async (key) => {
   try {
+    // 验证key参数
+    if (!key) {
+      throw new Error('缺少API密钥（key）');
+    }
+    
     const res = await fetch(`https://restapi.amap.com/v3/ip?key=${key}`);
     
     // 检查HTTP响应状态
     if (!res.ok) {
-      throw new Error(`HTTP错误：${res.status}`);
+      throw new Error(`HTTP错误：${res.status}（${res.statusText}）`);
     }
     
     const data = await res.json();
     
     // 检查API返回状态
     if (data.status !== '1') {
-      throw new Error(`API错误：${data.info || '未知错误'}`);
+      throw new Error(`API错误：${data.info}（错误码：${data.infocode || '未知'}）`);
     }
     
     return data;
@@ -76,54 +85,45 @@ export const getAdcode = async (key) => {
   }
 };
 
-// 获取高德地理天气信息，默认城市为南京
-export const getWeather = async (key, city = '南京') => {  // 这里设置默认城市为南京
+/**
+ * 获取南京的天气信息
+ * @param {string} key - 高德API密钥
+ * @param {string} type - 天气类型，'base'为实时天气，'all'为预报+实时
+ * @returns {Promise} 天气信息对象
+ */
+export const getNanjingWeather = async (key, type = 'base') => {
   try {
-    // 必须指定extensions参数（base:实时天气 all:预报+实时）
+    // 验证参数
+    if (!key) {
+      throw new Error('缺少API密钥（key）');
+    }
+    
+    // 验证天气类型参数
+    if (!['base', 'all'].includes(type)) {
+      throw new Error(`无效的天气类型：${type}，必须是'base'或'all'`);
+    }
+    
     const res = await fetch(
-      `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${encodeURIComponent(city)}&extensions=base`
+      `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${NANJING_ADCODE}&extensions=${type}`
     );
     
     if (!res.ok) {
-      throw new Error(`HTTP错误：${res.status}`);
+      throw new Error(`HTTP错误：${res.status}（${res.statusText}）`);
     }
     
     const data = await res.json();
     
     if (data.status !== '1') {
-      throw new Error(`API错误：${data.info || '未知错误'}`);
+      throw new Error(`API错误：${data.info}（错误码：${data.infocode || '未知'}）`);
     }
     
     return data;
   } catch (error) {
-    console.error('获取天气失败：', error);
+    console.error('获取南京天气失败：', error);
     throw error;
   }
 };
 
-// 补充getOtherWeather函数，默认城市为南京
-export const getOtherWeather = async (key, city = '伦敦') => {
-  try {
-    const res = await fetch(
-      `https://restapi.amap.com/v3/weather/weatherInfo?key=${key}&city=${encodeURIComponent(city)}&extensions=all`
-    );
-    
-    if (!res.ok) {
-      throw new Error(`HTTP错误：${res.status}`);
-    }
-    
-    const data = await res.json();
-    
-    if (data.status !== '1') {
-      throw new Error(`API错误：${data.info || '未知错误'}`);
-    }
-    
-    return data;
-  } catch (error) {
-    console.error('获取其他天气信息失败：', error);
-    throw error;
-  }
-};
 
 
 
