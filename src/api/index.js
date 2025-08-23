@@ -159,5 +159,5 @@ export const getNanjingWeather = async (key, type = 'base') => {
 //   } catch (error) {
 //     console.error('获取南京天气信息失败:', error);
 //     throw error; // 抛出错误供调用方处理
-  }
-};
+//   }
+// };
