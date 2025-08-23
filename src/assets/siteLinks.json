@@ -2,7 +2,12 @@
   {
     "icon": "Blog",
     "name": "博客",
-    "link": "/blog"  
+    "link": "http://blog.ciqubeijiang.cn/"  
+  },
+  {
+    "icon": "Photography",
+    "name": "摄影集",
+    "link": "http://travelogue.ciqubeijiang.cn/"
   },
   {
     "icon": "Cloud",
@@ -18,11 +23,6 @@
     "icon": "Compass",
     "name": "起始页",
     "link": "/"
-  },
-  {
-    "icon": "Photography",
-    "name": "摄影集",
-    "link": "/photos"
   },
   {
     "icon": "Diary",
